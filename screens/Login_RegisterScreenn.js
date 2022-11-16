@@ -15,6 +15,7 @@ export default ({navigation}) =>{
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app)
 
+    //Esto es para crear una cuenta nueva
     const handleCreateAccount = () =>{
         createUserWithEmailAndPassword(auth, email, password)
         .then((userCredential)=>{
@@ -28,6 +29,7 @@ export default ({navigation}) =>{
         })
     }
 
+    // Esto es para el login
     const handleSignIn = () =>{
         signInWithEmailAndPassword(auth, email, password)
         .then((userCredential)=>{
@@ -40,6 +42,7 @@ export default ({navigation}) =>{
         })
     }
 
+    //Esta parte es para hacer la amnimación del despliegue de los menú
     const imagePosition = useSharedValue(1); 
     const formButtonScale = useSharedValue(1);
     const [isregistering, setIsregistering] = useState(false)
@@ -93,13 +96,14 @@ export default ({navigation}) =>{
         }
     }
     return(
+        // Aquí se renderizan los componentes de la pantalla de login y registro
         <Animated.View style={styles.container}>
             <Animated.View style={[StyleSheet.absoluteFill, imageAnimatedStyle]}>
                 <Svg height={height + 100} width={width}>
                     <ClipPath id= 'clipPathId' >
                         <Ellipse cx={width / 2} rx={height} ry={height + 100}  />
                     </ClipPath>
-                    <Image href={require('../assets/login-background.jpg')}
+                    <Image href={require('../assets/Collage.png')}
                     width={width + 100} 
                     height={height + 100}
                     preserveAspectRatio='xMidYMid slice'

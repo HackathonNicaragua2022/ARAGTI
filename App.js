@@ -6,6 +6,8 @@ import Login_RegisterScreen from './screens/Login_RegisterScreenn';
 import HomeScreen from './screens/HomeScreen';
 import GustosScreen  from "./screens/GustosScreen";
 
+// Este archivo se podría decir que es el panel de control principal pues desde este se montan todas las pantallas
+
 
 const HomeAppNavigator = createBottomTabNavigator({
   Home: {
@@ -48,7 +50,7 @@ const AppNavigator1 = createSwitchNavigator({
   Home: {
     screen: HomeAppNavigator,
   }
-},{initialRouteName: 'Home'}
+},{initialRouteName: 'Splash'}
 )
 
 
