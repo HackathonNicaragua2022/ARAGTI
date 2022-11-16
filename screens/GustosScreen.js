@@ -4,7 +4,7 @@ import { View, StyleSheet, Text } from "react-native";
 export default ({navigation}) =>{
     return(
         <View>
-        <Text>Hola mundo 4!</Text>
+        <Text>Hola mundo este!</Text>
     </View>
     );
 }
