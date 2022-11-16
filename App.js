@@ -13,12 +13,12 @@ const HomeAppNavigator = createBottomTabNavigator({
   Home: {
     screen: HomeScreen,
   },
-  Gustos: GustosScreen ,
+  Favoritos: GustosScreen ,
 
 }, {defaultNavigationOptions: ({ navigation}) => ({
   tabBarIcon: ({ focused, horizontal, tintColor})=>{
     const { routeName } = navigation.state
-    let iconName
+    let iconName 
     if (routeName == 'Home'){
       iconName = `home-outline`
     } else{

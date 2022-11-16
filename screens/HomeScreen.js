@@ -19,22 +19,20 @@ const imagenes = [
   {
     image : "https://www.nicaraguadisena.com/wp-content/uploads/2022/09/Calle-La-Calzada.jpg", 
     title:'Visitar la Calzada de noche',
-    text: ''
+
+
   },
   {
     image : "https://www.flyingfourchette.com/wp-content/uploads/2018/05/Granada-The-Garden-Cafe.jpg", 
-    title: 'Intercambiar un libro',
-    text: 'Intercambia un libro en el Garden Café de Granada\n\nDuración:Libre\n\nPrecio: 1 libro\n\nNo incluye transporte desde Managua\n\nPet Friendly'
+    title: 'Intercambiar un libro'
   },
   {
     image : "https://lh3.googleusercontent.com/p/AF1QipOAvzQdgXCQBK3htiyI7pHnlF3QkvtBiDtbOJi9=s1360-w1360-h1020", 
-    title: 'Comer',
-    text: 'Hola Mundo 2'
+    title: 'Comer'
   },
   {
     image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdNMg0jFW8hMPvBYgPQAc_Cbv8g5iUH32lZv9EBw7hdd4UEUwFa1khQNJWHHt3DI_fy98&usqp=CAU", 
-    title: 'Comer Vigorón',
-    text: 'Hola mundo 3'
+    title: 'Comer Vigorón'
   }
 ];
 
@@ -77,7 +75,7 @@ function Backdrop({ scrollX }) {
         return (
           <Animated.Image
             key={index}
-            source={{ uri: imagenes.image }}
+            source={{ uri: imagen.image }}
             style={[
               { width: width, height: ALTURA_BACKDROP, opacity },
               StyleSheet.absoluteFillObject,
@@ -150,6 +148,16 @@ const [modal, setModal] = useState(false)
                 <Pressable onPress={() => setModal(!modal)}>
                     <Text style={{fontWeight: 'bold',fontSize: 22, color: '#EF662F'}} > { item.title } </Text>
                 </Pressable>
+                <Modal animationType="slide" transparent={true} visible={modal} style={styles.centerModal}>
+                        <View style={styles.contentModal}>
+                            <Text style={styles.tituloevento}>Intercambia un libro en el Garden Café de Granada</Text>
+                            <Text style={styles.textModal}>Duración: Libre{"\n\n"}Precio: 1 libro{"\n\n"}No incluye transporte desde Managua{"\n\n"}*Pet friendly</Text>
+                            <Pressable style={styles.cerraModal} onPress={()=> setModal(!modal)}>
+                                <Text style={styles.textcerrar}>Cerrar</Text>
+                            </Pressable>
+                        </View>
+                </Modal>
+
               </Animated.View>
             </View>
           );
@@ -182,7 +190,8 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    margin: 25,
+    margin: 20,
+    borderRadius: 25,
   },
   centerModal:{
     flex:1,
@@ -205,7 +214,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: 35,
     marginHorizontal: 20,
-    marginVertical: 20,
+    marginVertical: 10,
     borderWidth: 1,
     borderColor: 'white',
     shadowOffset: {
@@ -217,11 +226,20 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   textModal:{
-    justifyContent: 'center',
-    alignItems: 'center',
+    fontSize: 24,
+    fontWeight: '600',
+    color: 'black',
+    letterSpacing: 0.5,
   },
   textcerrar:{
     color: '#fff',
-    padding: 20,
+    padding: 15,
   },
+  tituloevento:{
+    fontSize: 24,
+    fontWeight: '600',
+    color: '#EF662F',
+    letterSpacing: 0.5,
+    padding: 20
+  }
 });
