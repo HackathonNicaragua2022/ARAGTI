@@ -1,7 +1,9 @@
 import React, {useState, useEffect, useRef} from "react";
 import { View, StyleSheet, ImageBackground, Image, Animated } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 
-export default ({ navigation }) =>{
+export default () =>{
+    const navigation = useNavigation();
     // Este hoook se utiliza para que cuando 5 segundos hayan pasado se actualice la variable time que es la que mide el tiempo
     const[time, setTime]= useState(false)
     // Este otro hook se utiliza para contar los 5 segundos que dura la pantalla Splash y luego actulizar

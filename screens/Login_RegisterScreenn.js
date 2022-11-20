@@ -3,44 +3,44 @@ import { View, StyleSheet, Text, Dimensions, TextInput, Pressable, Alert} from "
 import Svg, {Image, Ellipse, ClipPath} from "react-native-svg";
 import Animated, { useSharedValue, useAnimatedStyle, interpolate, withTiming, withDelay, withSequence, withSpring} from "react-native-reanimated";
 import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from 'firebase/auth';
-import {initializeApp} from 'firebase/app';
-import { firebaseConfig } from "../firebase-config";
+import { useNavigation } from "@react-navigation/native";
 
 const {height, width} = Dimensions.get('window')
-export default ({navigation}) =>{
+export default () =>{
+    const navigation = useNavigation();
     // Esto es para guardar el email y la contraseña del usuario
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
 
-    const app = initializeApp(firebaseConfig);
-    const auth = getAuth(app)
+    // const app = initializeApp(firebaseConfig);
+    // const auth = getAuth(app)
 
     //Esto es para crear una cuenta nueva
-    const handleCreateAccount = () =>{
-        createUserWithEmailAndPassword(auth, email, password)
-        .then((userCredential)=>{
-            console.log('Cuenta creada')
-            const user = userCredential.user;
-            console.log(user)
-        })
-        .catch(error =>{
-            console.log(error)
-            Alert.alert(error.message)
-        })
-    }
+    // const handleCreateAccount = () =>{
+        // createUserWithEmailAndPassword(auth, email, password)
+        // .then((userCredential)=>{
+            // console.log('Cuenta creada')
+            // const user = userCredential.user;
+            // console.log(user)
+        // })
+        // .catch(error =>{
+            // console.log(error)
+            // Alert.alert(error.message)
+        // })
+    // }
 
     // Esto es para el login
-    const handleSignIn = () =>{
-        signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential)=>{
-            console.log('Sesión Iniciada con éxito')
-            const user = userCredential.user
-            console.log(user)
-        })
-        .catch(error =>{
-            console.log(error)
-        })
-    }
+    // const handleSignIn = () =>{
+        // signInWithEmailAndPassword(auth, email, password)
+        // .then((userCredential)=>{
+            // console.log('Sesión Iniciada con éxito')
+            // const user = userCredential.user
+            // console.log(user)
+        // })
+        // .catch(error =>{
+            // console.log(error)
+        // })
+    // }
 
     //Esta parte es para hacer la amnimación del despliegue de los menú
     const imagePosition = useSharedValue(1); 

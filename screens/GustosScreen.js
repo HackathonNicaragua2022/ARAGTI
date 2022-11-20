@@ -1,7 +1,8 @@
 import React from "react";
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Image, Dimensions, FlatList } from "react-native";
 
 export default ({navigation}) =>{
+
     return(
         <View>
         <Text>Hola mundo este!</Text>

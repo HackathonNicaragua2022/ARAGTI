@@ -28,7 +28,7 @@ const imagenes = [
   },
   {
     image : "https://lh3.googleusercontent.com/p/AF1QipOAvzQdgXCQBK3htiyI7pHnlF3QkvtBiDtbOJi9=s1360-w1360-h1020", 
-    title: 'Comer'
+    title: 'Visitar nuevo resturante Europeo'
   },
   {
     image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdNMg0jFW8hMPvBYgPQAc_Cbv8g5iUH32lZv9EBw7hdd4UEUwFa1khQNJWHHt3DI_fy98&usqp=CAU", 

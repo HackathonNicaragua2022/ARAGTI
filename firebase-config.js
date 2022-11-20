@@ -3,6 +3,7 @@
 // https://firebase.google.com/docs/web/setup#available-libraries
 
 // Your web app's Firebase configuration
+
 export const firebaseConfig = {
   apiKey: "AIzaSyC9u_fO1ts0aVlY6GlJ1GA4aJOEgJxgp3o",
   authDomain: "turingo-38584.firebaseapp.com",
@@ -11,4 +12,3 @@ export const firebaseConfig = {
   messagingSenderId: "435082539918",
   appId: "1:435082539918:web:395d86b4ee7c3fe9afeadf"
 };
-
