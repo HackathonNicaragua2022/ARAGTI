@@ -1,12 +1,12 @@
 import React from "react";
 import { View, StyleSheet, Text, Image, Dimensions, FlatList } from "react-native";
 
-export default ({navigation}) =>{
+export default () =>{
 
     return(
-        <View>
-        <Text>Hola mundo este!</Text>
-    </View>
+        <View style={styles.container}>
+            <Text style={{color:'#EF662F', fontSize: 20, fontWeight: 'bold'}}>Aquí estará tu itinerario{"\n"}        ¡Esperalo Pronto!</Text>
+        </View>
     );
 }
 
@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: '#FFFFFF',
-        alignContent: 'center',
         alignItems: 'center',
+        justifyContent:'center'
     },
 })

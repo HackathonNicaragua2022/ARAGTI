@@ -2,6 +2,7 @@ import React, {useState, useEffect, useRef} from "react";
 import { View, StyleSheet, ImageBackground, Image, Animated } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 
+
 export default () =>{
     const navigation = useNavigation();
     // Este hoook se utiliza para que cuando 5 segundos hayan pasado se actualice la variable time que es la que mide el tiempo
@@ -29,7 +30,7 @@ export default () =>{
     // hayan pasado los 5 segundos
     useEffect(() =>{
         if(time){
-            navigation.navigate('Login')
+            navigation.replace('Login')
         }
     }, [time])
     

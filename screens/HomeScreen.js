@@ -8,34 +8,14 @@ import {
   Dimensions,
   SafeAreaView,
   Animated,
+  Modal, 
   Pressable,
-  Modal
+  TouchableOpacity
 } from "react-native";
-
+import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
-
-const imagenes = [
-    //En este arreglo se cargan las imagenes a utilizar en el carrusel
-  {
-    image : "https://www.nicaraguadisena.com/wp-content/uploads/2022/09/Calle-La-Calzada.jpg", 
-    title:'Visitar la Calzada de noche',
-
-
-  },
-  {
-    image : "https://www.flyingfourchette.com/wp-content/uploads/2018/05/Granada-The-Garden-Cafe.jpg", 
-    title: 'Intercambiar un libro'
-  },
-  {
-    image : "https://lh3.googleusercontent.com/p/AF1QipOAvzQdgXCQBK3htiyI7pHnlF3QkvtBiDtbOJi9=s1360-w1360-h1020", 
-    title: 'Visitar nuevo resturante Europeo'
-  },
-  {
-    image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdNMg0jFW8hMPvBYgPQAc_Cbv8g5iUH32lZv9EBw7hdd4UEUwFa1khQNJWHHt3DI_fy98&usqp=CAU", 
-    title: 'Comer Vigorón'
-  }
-];
-
+import { useFonts } from "expo-font";
+import actividades from "../assets/actividades";
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -45,25 +25,22 @@ const ESPACIO_CONTENEDOR = (width - ANCHO_CONTENEDOR) / 2;
 const ESPACIO = 10;
 const ALTURA_BACKDROP = height * 0.5;
 
-
-
 function Backdrop({ scrollX }) {
-    // En esta función se hace la animación para se haga el efecto de de que deslizan las imagenes
   return (
     <View
       style={[
         {
           position: "absolute",
           height: ALTURA_BACKDROP,
-          top: 0,
+          top: '60%',
           width: width,
         },
         StyleSheet.absoluteFillObject,
       ]}
     >
-      {imagenes.map((imagen, index) => {
+      {actividades.map(({image}, index) => {
         const inputRange = [
-          (index - 2) * ANCHO_CONTENEDOR,
+          (index - 1) * ANCHO_CONTENEDOR,
           index * ANCHO_CONTENEDOR,
           (index + 1) * ANCHO_CONTENEDOR,
         ];
@@ -75,33 +52,52 @@ function Backdrop({ scrollX }) {
         return (
           <Animated.Image
             key={index}
-            source={{ uri: imagen.image }}
+            source={{ uri: image }}
             style={[
-              { width: width, height: ALTURA_BACKDROP, opacity },
-              StyleSheet.absoluteFillObject,
+              { width: width, height: ALTURA_BACKDROP, opacity, position:'absolute', top:'100%'},
             ]}
           />
         );
       })}
       <LinearGradient
-        colors={["transparent", "white"]}
+        colors={["white", "transparent"]}
         style={{
           width,
           height: ALTURA_BACKDROP,
           position: "absolute",
-          bottom: 0,
+          top: '100%',
         }}
       />
     </View>
   );
 }
 
-export default function App() {
-    // En esta función se renderizan todos los componentes a los que anteriormente se les creeo una animación
-const [modal, setModal] = useState(false)
+export default function App() { 
+  const navigation = useNavigation()
   const scrollX = React.useRef(new Animated.Value(0)).current;
+  const nombre = 'Abril'
+  // Cargando la tipografía a usar en la app
+  const [fontsLoaded] = useFonts({
+    Creato: require('../assets/fonts/CreatoDisplay-Medium.otf'),
+    Light: require('../assets/fonts/CreatoDisplay-Regular.otf'),
+    Bold: require('../assets/fonts/CreatoDisplay-Bold.otf')
+  })
+
+  if(!fontsLoaded) return null;
+
   return (
     <SafeAreaView style={styles.container}>
+      <View>
+      <Pressable onPress={()=> navigation.openDrawer()}>
+        <View style={styles.usuarioview}>
+          <Image source={require('../assets/correo.png')} style={{height:50, width:50, marginLeft:10 }}/>
+          <Text style={styles.bienvenidatext}>Bienvenid@</Text>
+          <Text style={styles.usuariotext}>{"\n"}{nombre}</Text>
+        </View>  
+      </Pressable>
+        <Text style={[styles.preguntatext, {fontFamily: "Creato"}]}>¿Dónde quieres ir hoy?</Text>
+        <Text style={[styles.sugerenciastext, {fontFamily: "Light"}]}>Aquí algunas Sugerencias</Text>
+      </View>
       <StatusBar hidden />
       <Backdrop scrollX={scrollX} />
       <Animated.FlatList
@@ -113,14 +109,14 @@ const [modal, setModal] = useState(false)
         horizontal={true}
         snapToAlignment="start"
         contentContainerStyle={{
-          paddingTop: 200,
+          paddingTop: 100,
           paddingHorizontal: ESPACIO_CONTENEDOR,
         }}
         snapToInterval={ANCHO_CONTENEDOR}
         decelerationRate={0}
         scrollEventThrottle={16}
-        data={imagenes}
-        keyExtractor={(item) => item}
+        data={actividades}
+        //keyExtractor={(item) => item}
         renderItem={({ item, index }) => {
           const inputRange = [
             (index - 1) * ANCHO_CONTENEDOR,
@@ -132,8 +128,11 @@ const [modal, setModal] = useState(false)
             inputRange,
             outputRange: [0, -50, 0],
           });
+          const goToActividadPage = () =>{
+            navigation.navigate('Actividad', {id: item.id});
+          }
           return (
-            <View style={{ width: ANCHO_CONTENEDOR }}>
+            <Pressable onPress={goToActividadPage} style={{ width: ANCHO_CONTENEDOR }}>
               <Animated.View
                 style={{
                   marginHorizontal: ESPACIO,
@@ -144,25 +143,16 @@ const [modal, setModal] = useState(false)
                   transform: [{ translateY: scrollY }],
                 }}
               >
-                <Image source={{ uri: item.image }} style={styles.posterImage} />
-                <Pressable onPress={() => setModal(!modal)}>
-                    <Text style={{fontWeight: 'bold',fontSize: 22, color: '#EF662F'}} > { item.title } </Text>
-                </Pressable>
-                <Modal animationType="slide" transparent={true} visible={modal} style={styles.centerModal}>
-                        <View style={styles.contentModal}>
-                            <Text style={styles.tituloevento}>Intercambia un libro en el Garden Café de Granada</Text>
-                            <Text style={styles.textModal}>Duración: Libre{"\n\n"}Precio: 1 libro{"\n\n"}No incluye transporte desde Managua{"\n\n"}*Pet friendly</Text>
-                            <Pressable style={styles.cerraModal} onPress={()=> setModal(!modal)}>
-                                <Text style={styles.textcerrar}>Cerrar</Text>
-                            </Pressable>
-                        </View>
-                </Modal>
-
+                <Image source={{ uri: item.image}} style={styles.posterImage} />
+                <Text style={{ fontFamily: "Bold",fontWeight:'400', fontSize: 18, color:'#005EB8'}}>
+                  {item.title}
+                </Text>
               </Animated.View>
-            </View>
+            </Pressable>
           );
         }}
       />
+
     </SafeAreaView>
   );
 }
@@ -173,6 +163,36 @@ const styles = StyleSheet.create({
     backgroundColor: "#fff",
     justifyContent: "center",
   },
+  usuarioview:{
+    flexDirection: 'row',
+    marginTop: 20,
+  },
+  bienvenidatext:{
+    color:  '#005EB8',
+    marginLeft:10,
+    fontSize: 20,
+    marginTop: 4,
+  },
+  usuariotext:{
+    color:'#005EB8',
+    fontWeight: 'bold',
+    fontSize:18,
+    marginLeft:-100,
+    marginTop: 4,
+  },
+  preguntatext:{
+    color:'#EF662F',
+    fontSize: 26,
+    padding: 20,
+    marginTop: 10,
+  },
+  sugerenciastext:{
+    color:'#092040',
+    fontWeight: '300',
+    padding:16,
+    fontSize:17,
+    marginLeft: 10,
+  },
   posterImage: {
     width: "100%",
     height: ANCHO_CONTENEDOR * 1.2,
@@ -181,65 +201,4 @@ const styles = StyleSheet.create({
     margin: 0,
     marginBottom: 10,
   },
-  modalimage:{
-    width: "100%",
-    height: 400,
-  },
-  contentModal:{
-    backgroundColor: '#eeee',
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    margin: 20,
-    borderRadius: 25,
-  },
-  centerModal:{
-    flex:1,
-    justifyContent: 'center',
-    alignContent: 'center',
-  },
-  modalView:{
-    backgroundColor: '#fff',
-    borderRadius: 4,
-    padding: 40,
-    shadowColor: '#000',
-    shadowOffset:{
-        width: 0,
-        height: 3,
-    }
-  },
-  cerraModal:{
-    backgroundColor: '#EF662F',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: 35,
-    marginHorizontal: 20,
-    marginVertical: 10,
-    borderWidth: 1,
-    borderColor: 'white',
-    shadowOffset: {
-        width: 10,
-        height: 4,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  textModal:{
-    fontSize: 24,
-    fontWeight: '600',
-    color: 'black',
-    letterSpacing: 0.5,
-  },
-  textcerrar:{
-    color: '#fff',
-    padding: 15,
-  },
-  tituloevento:{
-    fontSize: 24,
-    fontWeight: '600',
-    color: '#EF662F',
-    letterSpacing: 0.5,
-    padding: 20
-  }
 });

@@ -1,223 +1,122 @@
-import React, {useState} from "react";
-import { View, StyleSheet, Text, Dimensions, TextInput, Pressable, Alert} from "react-native";
-import Svg, {Image, Ellipse, ClipPath} from "react-native-svg";
-import Animated, { useSharedValue, useAnimatedStyle, interpolate, withTiming, withDelay, withSequence, withSpring} from "react-native-reanimated";
-import {getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword} from 'firebase/auth';
-import { useNavigation } from "@react-navigation/native";
-
-const {height, width} = Dimensions.get('window')
-export default () =>{
-    const navigation = useNavigation();
-    // Esto es para guardar el email y la contraseña del usuario
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
-
-    // const app = initializeApp(firebaseConfig);
-    // const auth = getAuth(app)
-
-    //Esto es para crear una cuenta nueva
-    // const handleCreateAccount = () =>{
-        // createUserWithEmailAndPassword(auth, email, password)
-        // .then((userCredential)=>{
-            // console.log('Cuenta creada')
-            // const user = userCredential.user;
-            // console.log(user)
-        // })
-        // .catch(error =>{
-            // console.log(error)
-            // Alert.alert(error.message)
-        // })
-    // }
-
-    // Esto es para el login
-    // const handleSignIn = () =>{
-        // signInWithEmailAndPassword(auth, email, password)
-        // .then((userCredential)=>{
-            // console.log('Sesión Iniciada con éxito')
-            // const user = userCredential.user
-            // console.log(user)
-        // })
-        // .catch(error =>{
-            // console.log(error)
-        // })
-    // }
-
-    //Esta parte es para hacer la amnimación del despliegue de los menú
-    const imagePosition = useSharedValue(1); 
-    const formButtonScale = useSharedValue(1);
-    const [isregistering, setIsregistering] = useState(false)
-
-    const imageAnimatedStyle = useAnimatedStyle(() =>{
-        const interpolation = interpolate(imagePosition.value, [0,1], [-height / 2, 0])
-        return {
-            transform:[{ translateY: withTiming(interpolation, {duration: 1000})}]
-        }
-    })
-    
-    const buttonAnimatedStyle = useAnimatedStyle(() =>{
-        const interpolation = interpolate(imagePosition.value, [0,1], [250, 0]);
-        return{
-            opacity: withTiming(imagePosition.value, {duration: 500}),
-            transform: [{translateY: withTiming(interpolation, {duration: 1000})}]
-        };
-    })
-
-    const closeButtonAnimatedStyle = useAnimatedStyle(() =>{
-        const interpolation = interpolate(imagePosition.value, [0,1], [180, 360])
-        return{
-            opacity: withTiming(imagePosition.value === 1 ? 0 : 1, {duration: 800}),
-            transform: [{rotate: withTiming(interpolation + 'deg', {duration: 1000})}]
-        }
-    })
-    
-    const formAnimatedStyle = useAnimatedStyle(() =>{
-        return{
-            opacity: imagePosition.value === 0 ? withDelay(400, withTiming(1, {duration: 800})) : withTiming(0,{duration: 300})
-        }
-    })
-
-    const formButtonAnimatedStyle = useAnimatedStyle(() =>{
-        return{ 
-            transform: [{ scale : formButtonScale.value }]
-        }
-    })
+import { useNavigation } from '@react-navigation/native';
+import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
+import React, { useEffect, useState } from 'react';
+import { Alert, ImageBackground, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { auth } from '../firebaseConfig';
 
 
-    const loginHandler = () =>{
-        imagePosition.value = 0
-        if(isregistering){
-            setIsregistering(false)
-        }
+
+const LoginScreen = () => {
+  const navigation = useNavigation();
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
+  const onlogin = () =>{
+    if (email !== '' && password !== ''){
+        signInWithEmailAndPassword(auth, email, password)
+        .then(user => {
+            console.log('Login success', user)
+            alert('Signed in success')
+        })
+        .catch(error => Alert.alert('Login error', error.message))
     }
-    const registerHandler = () =>{
-        imagePosition.value = 0
-        if(!isregistering){
-            setIsregistering(true)
-        }
+  }
+
+  const onSignup = () =>{
+    if (email !== '' && password !== ''){
+        createUserWithEmailAndPassword(auth, email, password)
+        .then(user => {
+            console.log('Sign up success', user)
+            alert('Sign up in success')
+        })
+        .catch(error => Alert.alert('Sign up error', error.message))
     }
-    return(
-        // Aquí se renderizan los componentes de la pantalla de login y registro
-        <Animated.View style={styles.container}>
-            <Animated.View style={[StyleSheet.absoluteFill, imageAnimatedStyle]}>
-                <Svg height={height + 100} width={width}>
-                    <ClipPath id= 'clipPathId' >
-                        <Ellipse cx={width / 2} rx={height} ry={height + 100}  />
-                    </ClipPath>
-                    <Image href={require('../assets/Collage.png')}
-                    width={width + 100} 
-                    height={height + 100}
-                    preserveAspectRatio='xMidYMid slice'
-                    clipPath="url(#clipPathId)"
-                    />
-                </Svg>
-                <Animated.View style={[styles.closeButtonContainer, closeButtonAnimatedStyle]}>
-                    <Text onPress={() => imagePosition.value = 1}>X</Text>
-                </Animated.View>
-            </Animated.View>
-            <View style={styles.buttonContainer}>
-              <Animated.View style={buttonAnimatedStyle}>
-                <Pressable style={styles.button} onPress={loginHandler}>
-                        <Text style={styles.buttonText}>LOG IN</Text>
-                </Pressable>
-              </Animated.View>
-              <Animated.View style={buttonAnimatedStyle}>
-                    <Pressable style={styles.button} onPress={registerHandler}>
-                        <Text style={styles.buttonText}>REGISTER</Text>
-                    </Pressable> 
-              </Animated.View>
-                <Animated.View style={[styles.formInputContainer, formAnimatedStyle]}>
-                    <TextInput onChange={(text) => setEmail(text)} placeholder="Email" placeholderTextColor='black' style={styles.textInput}/>
-                    <TextInput onChange={(text) => setPassword(text)} placeholder="Contraseña" placeholderTextColor='black' style={styles.textInput}/>
-                    
-                    <Animated.View style={[styles.formButton, formButtonAnimatedStyle]}>
-                        <Pressable onPress={() =>navigation.navigate('Home')}>
-                            <Text style={styles.buttonText}>{isregistering ? 'REGISTER': 'LOG IN'}</Text>
-                        </Pressable>
-                    </Animated.View>
-                </Animated.View>
-            </View>
-        </Animated.View>
-    );
+  }
+   const imageBackground = require('../assets/Collage.png')
+  return (
+    <ImageBackground source={imageBackground} resizeMode='cover'  style={styles.container} imageStyle={{opacity:0.68}}>
+
+      <View style={styles.inputContainer}>
+        <TextInput
+          placeholder="Email"
+          value={email}
+          onChangeText={text => setEmail(text)}
+          style={styles.input}
+        />
+        <TextInput
+          placeholder="Password"
+          value={password}
+          onChangeText={text => setPassword(text)}
+          style={styles.input}
+          secureTextEntry
+        />
+      </View>
+
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          onPress={() => navigation.replace('Home')}
+          style={styles.button}
+        >
+          <Text style={styles.buttonText}>Login</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+        onPress={onSignup}
+          style={[styles.button, styles.buttonOutline]}
+        >
+          <Text style={styles.buttonOutlineText}>Register</Text>
+        </TouchableOpacity>
+      </View>
+    </ImageBackground>
+  )
 }
 
+export default LoginScreen
+
 const styles = StyleSheet.create({
-    closeButtonContainer:{
-        height: 40,
-        width: 40,
-        justifyContent: 'center',
-        alignSelf: 'center',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 5,
-        },
-        shadowOpacity: 0.34,
-        shadowRadius: 6.27,
-        elevation: 1,
-        backgroundColor: 'white',
-        alignItems: 'center',
-        borderRadius: 20,
-        top: -20,
-
-    },
-    buttonContainer:{
-        justifyContent: 'center',
-        height: height/3,
-
-    },
-    button:{
-        backgroundColor: '#EF662F',
-        height: 55,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 35,
-        marginHorizontal: 20,
-        marginVertical: 10,
-        borderWidth: 1,
-        borderColor: 'white',
-    },
-    buttonText:{
-        fontSize: 20,
-        fontWeight: '600',
-        color: 'white',
-        letterSpacing: 0.5,
-    },
-    formInputContainer:{
-       marginBottom: 70,
-       ...StyleSheet.absoluteFill,
-       zIndex: -1,
-       justifyContent: 'center',
-    },
-    textInput:{
-        height: 50,
-        borderWidth: 1,
-        borderColor: 'rgba(0,0,0,0.2)',
-        marginHorizontal: 20,
-        marginVertical: 10,
-        borderRadius: 25,
-        paddingLeft: 10,
-    },
-    formButton:{
-        backgroundColor: '#EF662F',
-        height: 55,
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 35,
-        marginHorizontal: 20,
-        marginVertical: 10,
-        borderWidth: 1,
-        borderColor: 'white',
-        shadowColor: '#000',
-        shadowOffset: {
-            width: 0,
-            height: 4,
-        },
-        shadowOpacity: 0.25,
-        shadowRadius: 3.84,
-        elevation: 5,
-    },
-    container: {
-        flex: 1,
-        justifyContent: 'flex-end',
-    },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  inputContainer: {
+    width: '80%'
+  },
+  input: {
+    borderColor: '#EF662F',
+    borderWidth: 0.5,
+    backgroundColor: 'white',
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    borderRadius: 10,
+    marginTop: 15,
+  },
+  buttonContainer: {
+    width: '60%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 40,
+  },
+  button: {
+    backgroundColor: '#EF662F',
+    width: '100%',
+    padding: 15,
+    borderRadius: 10,
+    alignItems: 'center',
+  },
+  buttonOutline: {
+    backgroundColor: 'white',
+    marginTop: 5,
+    borderColor: '#EF662F',
+    borderWidth: 2,
+  },
+  buttonText: {
+    color: 'white',
+    fontWeight: '700',
+    fontSize: 16,
+  },
+  buttonOutlineText: {
+    color: '#EF662F',
+    fontWeight: '700',
+    fontSize: 16,
+  },
 })
