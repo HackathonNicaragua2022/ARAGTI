@@ -1,21 +1,13 @@
 import { StatusBar } from "expo-status-bar";
-import React, { useState } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  Image,
-  Dimensions,
-  SafeAreaView,
-  Animated,
-  Modal, 
-  Pressable,
-  TouchableOpacity
-} from "react-native";
+import React, { cloneElement, useEffect, useState } from "react";
+import {StyleSheet, Text, View, Image, Dimensions, SafeAreaView, Animated, Modal, Pressable, TouchableOpacity, Touchable} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { LinearGradient } from "expo-linear-gradient";
 import { useFonts } from "expo-font";
-import actividades from "../assets/actividades";
+import { auth, db } from "../firebaseConfig";
+import { FontAwesome5 } from '@expo/vector-icons';
+import { collection, onSnapshot} from 'firebase/firestore'
+
 
 const width = Dimensions.get("window").width;
 const height = Dimensions.get("window").height;
@@ -26,6 +18,20 @@ const ESPACIO = 10;
 const ALTURA_BACKDROP = height * 0.5;
 
 function Backdrop({ scrollX }) {
+  // En esta función se crea la animación de la imagen de fondo
+  const [eventos, setEventos] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    setLoading(true)
+    const eventosQuery = collection(db, 'actividades')
+    onSnapshot(eventosQuery, (snapshot) => {
+      let eventoslist = []
+      snapshot.docs.map((doc) => eventoslist.push({...doc.data(), id: doc.id}))
+      setEventos(eventoslist)
+      setLoading(false)
+    })
+  }, [])
   return (
     <View
       style={[
@@ -38,7 +44,7 @@ function Backdrop({ scrollX }) {
         StyleSheet.absoluteFillObject,
       ]}
     >
-      {actividades.map(({image}, index) => {
+      {eventos.map(({image}, index) => {
         const inputRange = [
           (index - 1) * ANCHO_CONTENEDOR,
           index * ANCHO_CONTENEDOR,
@@ -73,9 +79,25 @@ function Backdrop({ scrollX }) {
 }
 
 export default function App() { 
+
+  const [eventos, setEventos] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  useEffect(() => {
+    setLoading(true)
+    const eventosQuery = collection(db, 'actividades')
+    onSnapshot(eventosQuery, (snapshot) => {
+      let eventoslist = []
+      snapshot.docs.map((doc) => eventoslist.push({...doc.data(), id: doc.id}))
+      setEventos(eventoslist)
+      setLoading(false)
+    })
+  }, [])
+
+
+
   const navigation = useNavigation()
   const scrollX = React.useRef(new Animated.Value(0)).current;
-  const nombre = 'Abril'
   // Cargando la tipografía a usar en la app
   const [fontsLoaded] = useFonts({
     Creato: require('../assets/fonts/CreatoDisplay-Medium.otf'),
@@ -88,13 +110,11 @@ export default function App() {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-      <Pressable onPress={()=> navigation.openDrawer()}>
         <View style={styles.usuarioview}>
           <Image source={require('../assets/correo.png')} style={{height:50, width:50, marginLeft:10 }}/>
           <Text style={styles.bienvenidatext}>Bienvenid@</Text>
-          <Text style={styles.usuariotext}>{"\n"}{nombre}</Text>
-        </View>  
-      </Pressable>
+          <Text style={styles.usuariotext}>{"\n"}{auth.currentUser?.email}</Text>
+        </View>
         <Text style={[styles.preguntatext, {fontFamily: "Creato"}]}>¿Dónde quieres ir hoy?</Text>
         <Text style={[styles.sugerenciastext, {fontFamily: "Light"}]}>Aquí algunas Sugerencias</Text>
       </View>
@@ -115,7 +135,7 @@ export default function App() {
         snapToInterval={ANCHO_CONTENEDOR}
         decelerationRate={0}
         scrollEventThrottle={16}
-        data={actividades}
+        data={eventos}
         //keyExtractor={(item) => item}
         renderItem={({ item, index }) => {
           const inputRange = [
@@ -129,7 +149,7 @@ export default function App() {
             outputRange: [0, -50, 0],
           });
           const goToActividadPage = () =>{
-            navigation.navigate('Actividad', {id: item.id});
+            navigation.navigate('Actividad', {id: item.id, image: item.image, title: item.title, texto: item.texto, location: item.location, duracion: item.duracion, precio: item.precio, detalle: item.detalle});
           }
           return (
             <Pressable onPress={goToActividadPage} style={{ width: ANCHO_CONTENEDOR }}>

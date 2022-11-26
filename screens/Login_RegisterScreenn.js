@@ -2,32 +2,50 @@ import { useNavigation } from '@react-navigation/native';
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import React, { useEffect, useState } from 'react';
 import { Alert, ImageBackground, KeyboardAvoidingView, StyleSheet, Text, TextInput, TouchableOpacity, View } from 'react-native'
+import { useSelector, useDispatch } from 'react-redux';
+import { setAuthState } from '../components/features/auth';
 import { auth } from '../firebaseConfig';
+
 
 
 
 const LoginScreen = () => {
   const navigation = useNavigation();
+
+  // Estas variables son para guardar el correo y contraseña del usuario
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(user => {
+      if(user) {
+        navigation.replace('Home')
+      }
+    })
+    return unsubscribe
+  }, [])
+
+  // Funcion para hacer el Login en Firebase
   const onlogin = () =>{
     if (email !== '' && password !== ''){
         signInWithEmailAndPassword(auth, email, password)
-        .then(user => {
-            console.log('Login success', user)
-            alert('Signed in success')
+        .then(userCredentials => {
+            const user = userCredentials.user;
+            console.log('Login success', user.email)
+            alert('Signed in success', user.email)
         })
         .catch(error => Alert.alert('Login error', error.message))
     }
   }
 
+  // Funcion para hacer el Registro de nuevas cuentas en Firebase
   const onSignup = () =>{
     if (email !== '' && password !== ''){
         createUserWithEmailAndPassword(auth, email, password)
-        .then(user => {
-            console.log('Sign up success', user)
-            alert('Sign up in success')
+        .then(userCredentials => {
+            const user = userCredentials.user
+            console.log('Sign up success', user.email)
+            alert('Sign up in success', user.email)
         })
         .catch(error => Alert.alert('Sign up error', error.message))
     }
@@ -54,7 +72,7 @@ const LoginScreen = () => {
 
       <View style={styles.buttonContainer}>
         <TouchableOpacity
-          onPress={() => navigation.replace('Home')}
+          onPress={onlogin}
           style={styles.button}
         >
           <Text style={styles.buttonText}>Login</Text>

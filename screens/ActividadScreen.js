@@ -1,11 +1,25 @@
 import { useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, SafeAreaView, Pressable, ImageBackground} from "react-native" ;
 import { StatusBar } from "expo-status-bar";
-import actividades from "../assets/actividades";
 import { Ionicons } from '@expo/vector-icons';
+import { auth, db } from "../firebaseConfig";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import { collection, onSnapshot} from 'firebase/firestore'
 
 const ActividadScreen = () => { 
+    const [eventos, setEventos] = useState([])
+    const [loading, setLoading] = useState(false)
+  
+    useEffect(() => {
+      setLoading(true)
+      const eventosQuery = collection(db, 'actividades')
+      onSnapshot(eventosQuery, (snapshot) => {
+        let eventoslist = []
+        snapshot.docs.map((doc) => eventoslist.push({...doc.data(), id: doc.id}))
+        setEventos(eventoslist)
+        setLoading(false)
+      })
+    }, [])
     const [ratio, setRatio] = useState(1);
 
     const navigation = useNavigation();
@@ -13,7 +27,7 @@ const ActividadScreen = () => {
     
     const actividadId = route.params?.id;
 
-    const actividad = actividades.find((p) => p.id === actividadId )
+    const actividad = eventos.find((p) => p.id === actividadId )
 
     useEffect(() =>{
         if (actividad?.image){
