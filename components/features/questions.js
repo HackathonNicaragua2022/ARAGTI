@@ -1,17 +1,17 @@
 
 export default [
     {
-        question: "En que año se independizo Granada?",
+        question: "¿Cuando fue fundada Granada?",
         options:[
             {
                 id:"0",
                 options:"A",
-                answer:"1974",
+                answer:"1524",
             },
             {
                 id:"1",
                 options:"B",
-                answer:"Europe",
+                answer:"1814",
             },
             {
                 id:"2",
@@ -21,113 +21,113 @@ export default [
             {
                 id:"3",
                 options:"D",
-                answer:"1876",
+                answer:"1921",
             }
         ],
         correctAnswerIndex: 0
     },
     {
-        question: "Que paso en 1857?",
+        question: "¿Quién fundó Granada?",
         options:[
             {
                 id:"0",
                 options:"A",
-                answer:"Cristóbal Colon descubrió Granda",
+                answer:"Andrés Castro Estrada",
             },
             {
                 id:"1",
                 options:"B",
-                answer:"La ciudad fue destruida por el ataque de los yankes",
+                answer:"Francisco Hernández de Córdoba",
             },
             {
                 id:"2",
                 options:"C",
-                answer:"Las tropas de William Walker se hicieron con el poder de Granada",
+                answer:"Cristobal Colón",
             },
             {
                 id:"3",
                 options:"D",
-                answer:"Ninguna de las anteriores",
+                answer:"Rafaela Herrera",
             }
         ],
-        correctAnswerIndex: 2  
+        correctAnswerIndex: 1  
     },
     {
-        question: "Cuandó se consideró Granada como capital antes de Managua?",
+        question: "¿Cuándo fue incendiada y destruida Granada?",
         options:[
             {
                 id:"0",
                 options:"A",
-                answer:"1877",
+                answer:"1556",
             },
             {
                 id:"1",
                 options:"B",
-                answer:"1891",
+                answer:"1856",
             },
             {
                 id:"2",
                 options:"C",
-                answer:"1870",
+                answer:"1914",
             },
             {
                 id:"3",
                 options:"D",
-                answer:"1865",
-            }
-        ],
-        correctAnswerIndex: 2
-    },
-    {
-        question: "De qué otra forma se le conoce al departamento de Granada?",
-        options:[
-            {
-                id:"0",
-                options:"A",
-                answer:"Ciudad bendita",
-            },
-            {
-                id:"1",
-                options:"B",
-                answer:"Ciudad colonial",
-            },
-            {
-                id:"2",
-                options:"C",
-                answer:"Ciudad de las montañas",
-            },
-            {
-                id:"3",
-                options:"D",
-                answer:"Ciudad de las flores",
+                answer:"1972",
             }
         ],
         correctAnswerIndex: 1
     },
     {
-        question: "Cual es la razón por la que Granada no fue capital con el surgimiento de managua?",
+        question: "¿Cuántas isletas hay en Granada?",
         options:[
             {
                 id:"0",
                 options:"A",
-                answer:"Managua tenía más poder militar",
+                answer:"Menos de 365",
             },
             {
                 id:"1",
                 options:"B",
-                answer:"Granada sufría de constante crisis económicas",
+                answer:"Exactamente 365",
             },
             {
                 id:"2",
                 options:"C",
-                answer:"Granada no era muy poblada",
+                answer:"Más de 365",
             },
             {
                 id:"3",
                 options:"D",
-                answer:"Granada no era lo suficientemente grande",
+                answer:"Alrededor de 100",
             }
         ],
-        correctAnswerIndex: 3
+        correctAnswerIndex: 2
+    },
+    {
+        question: "¿Cómo se llamaba Antes Granada?",
+        options:[
+            {
+                id:"0",
+                options:"A",
+                answer:"Paris",
+            },
+            {
+                id:"1",
+                options:"B",
+                answer:"Nequecheri",
+            },
+            {
+                id:"2",
+                options:"C",
+                answer:"Guayana",
+            },
+            {
+                id:"3",
+                options:"D",
+                answer:"Moctezuma",
+            }
+        ],
+        correctAnswerIndex: 1
     }
 ]

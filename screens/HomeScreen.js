@@ -80,6 +80,7 @@ function Backdrop({ scrollX }) {
 
 export default function App() { 
 
+  // En esta parte se cargan las imagenes desde la base de Datos
   const [eventos, setEventos] = useState([])
   const [loading, setLoading] = useState(false)
 
@@ -98,6 +99,7 @@ export default function App() {
 
   const navigation = useNavigation()
   const scrollX = React.useRef(new Animated.Value(0)).current;
+
   // Cargando la tipografía a usar en la app
   const [fontsLoaded] = useFonts({
     Creato: require('../assets/fonts/CreatoDisplay-Medium.otf'),
